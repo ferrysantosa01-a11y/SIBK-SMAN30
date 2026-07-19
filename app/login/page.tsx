@@ -1,11 +1,41 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 
 export default function LoginPage() {
 
+  const router = useRouter();
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+
+
+  function handleLogin() {
+
+
+    if (username === "admin" && password === "123456") {
+
+      router.push("/dashboard");
+
+    } else {
+
+      alert("Username atau password salah");
+
+    }
+
+
+  }
+
+
+
   return (
 
     <main className="min-h-screen bg-gray-100 flex items-center justify-center">
+
 
       <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
 
@@ -23,7 +53,7 @@ export default function LoginPage() {
 
           <Image
             src="/logo/logo-bk-sman30.png"
-            alt="Logo BK SMAN 30"
+            alt="Logo BK"
             width={90}
             height={90}
           />
@@ -47,31 +77,38 @@ export default function LoginPage() {
 
         <div className="mt-8">
 
-          <label className="block mb-2">
+          <label>
             Username
           </label>
 
           <input
-            type="text"
-            className="w-full border rounded-lg p-3"
-            placeholder="Masukkan username"
+            className="w-full border rounded-lg p-3 mt-2"
+            value={username}
+            onChange={(e)=>setUsername(e.target.value)}
           />
 
         </div>
+
 
 
 
 
         <div className="mt-5">
 
-          <label className="block mb-2">
+          <label>
             Password
           </label>
 
           <input
+
             type="password"
-            className="w-full border rounded-lg p-3"
-            placeholder="Masukkan password"
+
+            className="w-full border rounded-lg p-3 mt-2"
+
+            value={password}
+
+            onChange={(e)=>setPassword(e.target.value)}
+
           />
 
         </div>
@@ -79,7 +116,11 @@ export default function LoginPage() {
 
 
 
+
         <button
+
+          onClick={handleLogin}
+
           className="
           w-full
           mt-8
@@ -90,9 +131,13 @@ export default function LoginPage() {
           rounded-lg
           font-semibold
           "
+
         >
+
           Masuk
+
         </button>
+
 
 
 
