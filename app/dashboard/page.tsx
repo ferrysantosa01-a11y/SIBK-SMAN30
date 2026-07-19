@@ -1,208 +1,211 @@
-import Image from "next/image";
+export const dynamic = "force-dynamic";
 
+import Link from "next/link";
 
-export default function DashboardPage() {
 
-  return (
+export default function Dashboard(){
 
-    <main className="min-h-screen bg-gray-100">
 
+  const menu = [
 
-      <header className="bg-blue-700 p-6 text-white">
 
-        <h1 className="text-3xl font-bold">
-          SIBK
-        </h1>
+    {
+      nama:"Data Siswa",
+      icon:"👨‍🎓",
+      deskripsi:"Kelola data lengkap siswa",
+      link:"/siswa",
+      warna:"bg-blue-600 hover:bg-blue-700"
+    },
 
-        <p>
-          Sistem Informasi Bimbingan Konseling
-        </p>
 
-        <p className="text-sm">
-          SMAN 30 Kabupaten Tangerang
-        </p>
+    {
+      nama:"Absensi",
+      icon:"📋",
+      deskripsi:"Input dan monitoring kehadiran siswa",
+      link:"/absensi",
+      warna:"bg-green-600 hover:bg-green-700"
+    },
 
-      </header>
 
+    {
+      nama:"Rekap Absensi",
+      icon:"📊",
+      deskripsi:"Laporan kehadiran siswa",
+      link:"/absensi/rekap",
+      warna:"bg-purple-600 hover:bg-purple-700"
+    },
 
 
+    {
+      nama:"Prota BK",
+      icon:"📅",
+      deskripsi:"Program Tahunan Bimbingan Konseling",
+      link:"/program-bk/prota",
+      warna:"bg-indigo-600 hover:bg-indigo-700"
+    },
 
 
-      <div className="flex">
+    {
+      nama:"Prosem BK",
+      icon:"📆",
+      deskripsi:"Program Semester Bimbingan Konseling",
+      link:"/program-bk/prosem",
+      warna:"bg-cyan-600 hover:bg-cyan-700"
+    },
 
 
-        <aside className="w-72 bg-white min-h-screen shadow-lg p-6">
+    {
+      nama:"RPL BK",
+      icon:"📄",
+      deskripsi:"Rencana Pelaksanaan Layanan",
+      link:"/program-bk/rpl",
+      warna:"bg-orange-600 hover:bg-orange-700"
+    },
 
 
-          <div className="text-center">
+    {
+      nama:"Arsip Dokumen BK",
+      icon:"📁",
+      deskripsi:"Upload Word, Excel, PDF administrasi BK",
+      link:"/dokumen-bk",
+      warna:"bg-pink-600 hover:bg-pink-700"
+    },
 
 
-            <Image
-              src="/profile/ferry.png"
-              alt="Foto Admin"
-              width={120}
-              height={120}
-              className="rounded-full mx-auto"
-            />
+    {
+      nama:"Laporan",
+      icon:"📁",
+      deskripsi:"Laporan kegiatan BK",
+      link:"/laporan",
+      warna:"bg-red-600 hover:bg-red-700"
+    },
 
 
-            <h2 className="font-bold text-xl mt-3">
-              Ferry Santosa
-            </h2>
+    {
+      nama:"Pengaturan",
+      icon:"⚙️",
+      deskripsi:"Konfigurasi sistem",
+      link:"/pengaturan",
+      warna:"bg-gray-700 hover:bg-gray-800"
+    }
 
 
-            <p className="text-gray-500">
-              Administrator
-            </p>
+  ];
 
 
-          </div>
 
 
 
+return (
 
+<main className="min-h-screen bg-gray-100 p-8">
 
-          <nav className="mt-8 space-y-3">
 
+<div className="bg-white rounded-xl shadow-lg p-8">
 
-            <a href="/dashboard" className="block p-3 rounded-lg bg-blue-100">
-              📊 Dashboard
-            </a>
 
 
-            <a href="/siswa" className="block p-3 rounded-lg hover:bg-gray-100">
-              👨‍🎓 Data Siswa
-            </a>
+<div className="mb-8">
 
 
-            <a href="/absensi" className="block p-3 rounded-lg hover:bg-gray-100">
-              📅 Absensi
-            </a>
+<h1 className="text-4xl font-bold text-blue-700">
 
+Sistem Informasi Bimbingan Konseling
 
-            <a href="/pelanggaran" className="block p-3 rounded-lg hover:bg-gray-100">
-              ⚠ Pelanggaran
-            </a>
+</h1>
 
 
-            <a href="/konseling" className="block p-3 rounded-lg hover:bg-gray-100">
-              📝 Konseling Individu
-            </a>
+<p className="text-gray-500 mt-2 text-lg">
 
+SMAN 30 Kabupaten Tangerang
 
-            <a href="/hasil-konseling" className="block p-3 rounded-lg hover:bg-gray-100">
-              📌 Hasil Konseling
-            </a>
+</p>
 
 
-            <a href="/akpd" className="block p-3 rounded-lg hover:bg-gray-100">
-              📋 AKPD
-            </a>
+</div>
 
 
-            <a href="/rpl" className="block p-3 rounded-lg hover:bg-gray-100">
-              📘 RPL
-            </a>
 
 
-            <a href="/program-tahunan" className="block p-3 rounded-lg hover:bg-gray-100">
-              📆 Program Tahunan
-            </a>
 
+<h2 className="text-2xl font-bold text-gray-700 mb-6">
 
-            <a href="/program-semester" className="block p-3 rounded-lg hover:bg-gray-100">
-              📅 Program Semester
-            </a>
+Menu Utama
 
+</h2>
 
-            <a href="/prestasi" className="block p-3 rounded-lg hover:bg-gray-100">
-              🏆 Prestasi
-            </a>
 
 
-            <a href="/laporan" className="block p-3 rounded-lg hover:bg-gray-100">
-              📄 Laporan
-            </a>
 
 
-            <a href="#" className="block p-3 rounded-lg hover:bg-gray-100">
-              ⚙ Pengaturan
-            </a>
 
+<div className="grid md:grid-cols-3 gap-6">
 
-          </nav>
 
 
-        </aside>
+{
 
+menu.map((item,index)=>(
 
 
+<Link
 
+key={index}
 
+href={item.link}
 
+className={`${item.warna} text-white rounded-xl p-6 shadow-lg transition hover:scale-105`}
 
-        <section className="flex-1 p-8">
+>
 
 
-          <h1 className="text-3xl font-bold text-gray-700">
-            Selamat Datang, Ferry Santosa
-          </h1>
+<div className="text-4xl mb-3">
 
+{item.icon}
 
-          <p className="text-gray-500 mt-2">
-            Dashboard Administrator SIBK
-          </p>
+</div>
 
 
 
+<h3 className="text-xl font-bold">
 
+{item.nama}
 
-          <div className="grid grid-cols-4 gap-6 mt-8">
+</h3>
 
 
-            <div className="bg-white rounded-xl shadow p-6">
-              <p>Data Siswa</p>
-              <h2 className="text-4xl font-bold text-blue-700">
-                0
-              </h2>
-            </div>
 
+<p className="mt-2">
 
-            <div className="bg-white rounded-xl shadow p-6">
-              <p>Absensi</p>
-              <h2 className="text-4xl font-bold text-green-600">
-                0
-              </h2>
-            </div>
+{item.deskripsi}
 
+</p>
 
-            <div className="bg-white rounded-xl shadow p-6">
-              <p>Pelanggaran</p>
-              <h2 className="text-4xl font-bold text-red-600">
-                0
-              </h2>
-            </div>
 
 
-            <div className="bg-white rounded-xl shadow p-6">
-              <p>Konseling</p>
-              <h2 className="text-4xl font-bold text-purple-600">
-                0
-              </h2>
-            </div>
+</Link>
 
 
-          </div>
+))
 
 
-        </section>
+}
 
 
-      </div>
 
+</div>
 
-    </main>
 
-  );
+
+
+
+</div>
+
+
+</main>
+
+
+);
+
 
 }
