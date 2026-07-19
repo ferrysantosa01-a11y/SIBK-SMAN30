@@ -1,53 +1,16 @@
-"use client";
-
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 
 export default function LoginPage() {
 
-
-  const router = useRouter();
-
-
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-
-
-
-  function handleLogin() {
-
-
-    if (username === "admin" && password === "123456") {
-
-
-      router.push("/dashboard");
-
-
-    } else {
-
-
-      alert("Username atau password salah");
-
-
-    }
-
-
-  }
-
-
-
   return (
 
-    <main className="min-h-screen flex items-center justify-center bg-blue-50">
+    <main className="min-h-screen bg-gray-100 flex items-center justify-center">
+
+      <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
 
 
-      <div className="bg-white p-10 rounded-xl shadow-xl w-full max-w-md">
-
-
-
-        <div className="flex justify-center gap-5">
+        <div className="flex justify-center gap-5 mb-6">
 
 
           <Image
@@ -58,10 +21,9 @@ export default function LoginPage() {
           />
 
 
-
           <Image
             src="/logo/logo-bk-sman30.png"
-            alt="Logo BK"
+            alt="Logo BK SMAN 30"
             width={90}
             height={90}
           />
@@ -71,103 +33,66 @@ export default function LoginPage() {
 
 
 
-
-        <h1 className="text-3xl font-bold text-blue-700 text-center mt-6">
-
+        <h1 className="text-3xl font-bold text-center text-blue-700">
           Login SIBK
-
         </h1>
 
 
-
-
-        <p className="text-center text-gray-600 mt-2">
-
+        <p className="text-center text-gray-500 mt-2">
           SMAN 30 Kabupaten Tangerang
-
         </p>
-
 
 
 
 
         <div className="mt-8">
 
-
-          <label>
+          <label className="block mb-2">
             Username
           </label>
 
-
           <input
-
             type="text"
-
-            value={username}
-
-            onChange={(e)=>setUsername(e.target.value)}
-
-            className="w-full border rounded-lg p-3 mt-2"
-
+            className="w-full border rounded-lg p-3"
             placeholder="Masukkan username"
-
           />
 
+        </div>
 
 
 
-          <label className="block mt-5">
 
+        <div className="mt-5">
+
+          <label className="block mb-2">
             Password
-
           </label>
 
-
-
           <input
-
             type="password"
-
-            value={password}
-
-            onChange={(e)=>setPassword(e.target.value)}
-
-            className="w-full border rounded-lg p-3 mt-2"
-
+            className="w-full border rounded-lg p-3"
             placeholder="Masukkan password"
-
           />
 
-
-
-
-
-          <button
-
-            onClick={handleLogin}
-
-            className="w-full bg-blue-600 text-white py-3 rounded-lg mt-6 font-bold"
-
-          >
-
-            Masuk
-
-          </button>
-
-
-
-
         </div>
 
 
 
-        <div className="text-center text-sm text-gray-400 mt-5">
 
-          Demo Login:
-          <br/>
-          admin / 123456
-
-        </div>
+        <button
+          className="
+          w-full
+          mt-8
+          bg-blue-600
+          hover:bg-blue-700
+          text-white
+          py-3
+          rounded-lg
+          font-semibold
+          "
+        >
+          Masuk
+        </button>
 
 
 
@@ -177,4 +102,5 @@ export default function LoginPage() {
     </main>
 
   );
+
 }
