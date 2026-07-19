@@ -4,7 +4,6 @@ import Link from "next/link";
 
 export default function Home() {
 
-
   return (
 
     <main className="min-h-screen bg-gray-100 flex items-center justify-center">
@@ -18,15 +17,15 @@ export default function Home() {
 
           <Image
             src="/logo/logo-sman30.png"
-            alt="Logo SMAN 30"
+            alt="Logo SMAN 30 Kabupaten Tangerang"
             width={100}
             height={100}
           />
 
 
           <Image
-            src="/logo/logo-bk.png"
-            alt="Logo BK"
+            src="/logo/logo-bk-sman30.png"
+            alt="Logo BK SMAN 30"
             width={100}
             height={100}
           />
@@ -80,6 +79,5 @@ export default function Home() {
     </main>
 
   );
-
 
 }
