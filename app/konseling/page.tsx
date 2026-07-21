@@ -1,220 +1,469 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { supabase } from "@/lib/supabase";
+import UserInfo from "@/components/auth/UserInfo";
+
+interface Konseling {
+  id: number;
+  siswa_id: number;
+  tanggal: string;
+  jenis: string;
+  permasalahan: string;
+  hasil: string;
+  tindak_lanjut: string;
+  status: string;
+
+  siswa: {
+    nama: string;
+    kelas: string;
+  } | null;
+}
+
+
 export default function KonselingPage() {
 
-
-  const dataKonseling = [
-
-
-    {
-      nama: "Ahmad Fauzan",
-      kelas: "X-1",
-      tanggal: "19-07-2026",
-      masalah: "Sering terlambat datang ke sekolah",
-      pelanggaran: "Terlambat (5 poin)",
-      hasil: "Diberikan pembinaan",
-      status: "Proses"
-    },
+  const router = useRouter();
 
 
-    {
-      nama: "Siti Aisyah",
-      kelas: "X-2",
-      tanggal: "18-07-2026",
-      masalah: "Kesulitan mengikuti pembelajaran",
-      pelanggaran: "Tidak ada",
-      hasil: "Pendampingan belajar",
-      status: "Selesai"
-    },
+  const [data, setData] = useState<Konseling[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+const [role, setRole] = useState("");
 
 
-    {
-      nama: "Rizky Ramadhan",
-      kelas: "XI-1",
-      tanggal: "17-07-2026",
-      masalah: "Tidak masuk tanpa keterangan",
-      pelanggaran: "Alpa (10 poin)",
-      hasil: "Pemanggilan orang tua",
-      status: "Proses"
+  async function loadData() {
+
+    try {
+
+      setLoading(true);
+
+
+      const { data, error } = await supabase
+        .from("konseling")
+        .select(`
+          id,
+          siswa_id,
+          tanggal,
+          jenis,
+          permasalahan,
+          hasil,
+          tindak_lanjut,
+          status,
+          siswa (
+            nama,
+            kelas
+          )
+        `)
+        .order("tanggal", {
+          ascending: false
+        });
+
+
+
+      if (error) throw error;
+
+
+      setData((data as Konseling[]) || []);
+
+
+
+    } catch (err: any) {
+
+
+      console.error(err);
+
+      setError(err.message);
+
+
+
+    } finally {
+
+
+      setLoading(false);
+
+
+    }
+
+  }
+
+
+
+ async function checkRole() {
+
+  const {
+    data:{
+      user
+    }
+  } = await supabase.auth.getUser();
+
+
+  if (!user) return;
+
+
+  const { data } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
+
+
+
+  setRole(data?.role || "");
+
+
+
+  if (data?.role === "Siswa") {
+
+    router.push("/dashboard");
+
+    return;
+
+  }
+
+
+  loadData();
+
+}
+
+
+
+useEffect(() => {
+
+  checkRole();
+
+}, []);
+
+
+
+
+  async function deleteKonseling(id: number) {
+
+
+    const confirmDelete = confirm(
+      "Apakah data konseling ini ingin dihapus?"
+    );
+
+
+    if (!confirmDelete) return;
+
+
+
+    try {
+
+
+      const { error } = await supabase
+        .from("konseling")
+        .delete()
+        .eq("id", id);
+
+
+
+      if (error) throw error;
+
+
+
+      loadData();
+
+
+
+    } catch (err: any) {
+
+
+      alert(err.message);
+
+
     }
 
 
-  ];
+  }
 
 
 
   return (
 
-    <main className="min-h-screen bg-gray-100 p-8">
+    <main className="min-h-screen bg-gray-50 p-6">
+
+      <div className="max-w-7xl mx-auto bg-white rounded-xl shadow p-6">
+
+<UserInfo />
+       <div className="flex justify-between items-center mb-6">
 
 
-      <div className="bg-white rounded-xl shadow p-6">
+<div>
+
+<button
+  onClick={() => router.push("/dashboard")}
+  className="mb-3 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded"
+>
+  ← Kembali ke Dashboard
+</button>
 
 
-        <div className="flex justify-between items-center">
+<h1 className="text-2xl font-bold text-blue-700">
+  Data Konseling
+</h1>
+
+</div>
 
 
-          <div>
+         {role !== "Siswa" && (
+
+<Link
+  href="/konseling/tambah"
+  className="bg-blue-600 text-white px-4 py-2 rounded"
+>
+  + Tambah Konseling
+</Link>
+
+)}
 
 
-            <h1 className="text-3xl font-bold text-blue-700">
-              Konseling Individu
-            </h1>
+        </div>
+      {loading ? (
+
+          <p className="text-gray-500">
+            Memuat data konseling...
+          </p>
 
 
-            <p className="text-gray-500 mt-2">
-              Layanan konseling siswa SMAN 30 Kabupaten Tangerang
+        ) : error ? (
+
+          <p className="text-red-500">
+            {error}
+          </p>
+
+
+        ) : data.length === 0 ? (
+
+          <div className="mt-10 bg-yellow-50 border border-yellow-200 rounded-lg p-8 text-center">
+
+            <h2 className="text-xl font-semibold text-yellow-700">
+              Belum Ada Data Konseling
+            </h2>
+
+
+            <p className="text-gray-600 mt-3">
+              Silakan klik tombol <b>Tambah Konseling</b> untuk menambahkan data pertama.
             </p>
+
+          </div>
+
+
+        ) : (
+
+          <div className="overflow-x-auto">
+
+
+            <table className="min-w-full border border-gray-200">
+
+
+              <thead className="bg-blue-600 text-white">
+
+                <tr>
+
+
+                  <th className="border px-4 py-3 text-center">
+                    No
+                  </th>
+
+
+                  <th className="border px-4 py-3">
+                    Nama Siswa
+                  </th>
+
+
+                  <th className="border px-4 py-3">
+                    Kelas
+                  </th>
+
+
+                  <th className="border px-4 py-3">
+                    Tanggal
+                  </th>
+
+
+                  <th className="border px-4 py-3">
+                    Jenis
+                  </th>
+
+
+                  <th className="border px-4 py-3">
+                    Permasalahan
+                  </th>
+
+
+                  <th className="border px-4 py-3">
+                    Hasil
+                  </th>
+
+
+                  <th className="border px-4 py-3">
+                    Tindak Lanjut
+                  </th>
+
+
+                  <th className="border px-4 py-3 text-center">
+                    Status
+                  </th>
+
+
+                  <th className="border px-4 py-3 text-center">
+                    Aksi
+                  </th>
+
+
+                </tr>
+
+              </thead>
+
+
+
+              <tbody>
+
+
+                {data.map((item, index) => (
+
+
+                  <tr
+                    key={item.id}
+                    className="hover:bg-gray-50"
+                  >
+
+
+                    <td className="border px-4 py-3 text-center">
+                      {index + 1}
+                    </td>
+
+
+
+                    <td className="border px-4 py-3">
+                      {item.siswa?.nama ?? "-"}
+                    </td>
+
+
+
+                    <td className="border px-4 py-3 text-center">
+                      {item.siswa?.kelas ?? "-"}
+                    </td>
+
+
+
+                    <td className="border px-4 py-3">
+                      {new Date(item.tanggal).toLocaleDateString("id-ID")}
+                    </td>
+
+
+
+                    <td className="border px-4 py-3">
+                      {item.jenis}
+                    </td>
+
+
+
+                    <td className="border px-4 py-3">
+                      <div className="max-w-xs truncate">
+                        {item.permasalahan}
+                      </div>
+                    </td>
+
+
+
+                    <td className="border px-4 py-3">
+                      <div className="max-w-xs truncate">
+                        {item.hasil}
+                      </div>
+                    </td>
+
+
+
+                    <td className="border px-4 py-3">
+                      <div className="max-w-xs truncate">
+                        {item.tindak_lanjut}
+                      </div>
+                    </td>
+
+
+
+                    <td className="border px-4 py-3 text-center">
+
+                      <span
+                        className={
+                          item.status === "Selesai"
+                            ? "px-3 py-1 rounded-full bg-green-100 text-green-700"
+                            : item.status === "Proses"
+                            ? "px-3 py-1 rounded-full bg-yellow-100 text-yellow-700"
+                            : "px-3 py-1 rounded-full bg-red-100 text-red-700"
+                        }
+                      >
+
+                        {item.status}
+
+                      </span>
+
+
+                    </td>
+  <td className="border px-4 py-3">
+
+                      <div className="flex justify-center gap-2">
+
+
+                        <button
+                          onClick={() =>
+                            router.push(`/konseling/${item.id}`)
+                          }
+                          className="bg-sky-500 hover:bg-sky-600 text-white px-3 py-2 rounded"
+                        >
+                          Detail
+                        </button>
+
+
+
+                        <button
+                          onClick={() =>
+                            router.push(`/konseling/${item.id}/edit`)
+                          }
+                          className="bg-amber-500 hover:bg-amber-600 text-white px-3 py-2 rounded"
+                        >
+                          Edit
+                        </button>
+
+
+
+                        <button
+                          onClick={() =>
+                            deleteKonseling(item.id)
+                          }
+                          className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded"
+                        >
+                          Hapus
+                        </button>
+
+
+                      </div>
+
+                    </td>
+
+
+
+                  </tr>
+
+
+                ))}
+
+
+              </tbody>
+
+
+            </table>
 
 
           </div>
 
 
-
-
-          <button className="bg-blue-600 text-white px-5 py-3 rounded-lg">
-
-            + Tambah Konseling
-
-          </button>
-
-
-        </div>
-
-
-
-
-
-        <div className="overflow-x-auto mt-8">
-
-
-          <table className="w-full border">
-
-
-            <thead className="bg-blue-600 text-white">
-
-
-              <tr>
-
-
-                <th className="border p-3">
-                  No
-                </th>
-
-
-                <th className="border p-3">
-                  Nama Siswa
-                </th>
-
-
-                <th className="border p-3">
-                  Kelas
-                </th>
-
-
-                <th className="border p-3">
-                  Tanggal
-                </th>
-
-
-                <th className="border p-3">
-                  Permasalahan
-                </th>
-
-
-                <th className="border p-3">
-                  Pelanggaran
-                </th>
-
-
-                <th className="border p-3">
-                  Hasil Sementara
-                </th>
-
-
-                <th className="border p-3">
-                  Status
-                </th>
-
-
-              </tr>
-
-
-            </thead>
-
-
-
-
-
-            <tbody>
-
-
-              {dataKonseling.map((item,index)=>(
-
-
-                <tr key={index}>
-
-
-                  <td className="border p-3 text-center">
-                    {index + 1}
-                  </td>
-
-
-
-                  <td className="border p-3">
-                    {item.nama}
-                  </td>
-
-
-
-                  <td className="border p-3">
-                    {item.kelas}
-                  </td>
-
-
-
-                  <td className="border p-3">
-                    {item.tanggal}
-                  </td>
-
-
-
-                  <td className="border p-3">
-                    {item.masalah}
-                  </td>
-
-
-
-                  <td className="border p-3">
-                    {item.pelanggaran}
-                  </td>
-
-
-
-                  <td className="border p-3">
-                    {item.hasil}
-                  </td>
-
-
-
-                  <td className="border p-3 text-center">
-                    {item.status}
-                  </td>
-
-
-
-                </tr>
-
-
-              ))}
-
-
-            </tbody>
-
-
-          </table>
-
-
-        </div>
-
+        )}
 
 
       </div>
@@ -222,7 +471,7 @@ export default function KonselingPage() {
 
     </main>
 
-
   );
+
 
 }

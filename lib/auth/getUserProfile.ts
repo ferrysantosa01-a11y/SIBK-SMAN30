@@ -1,0 +1,37 @@
+import { supabase } from "@/lib/supabase";
+
+
+export async function getUserProfile() {
+
+
+  const {
+    data: {
+      user
+    }
+  } = await supabase.auth.getUser();
+
+
+
+  if (!user) {
+
+    return null;
+
+  }
+
+
+
+  const { data } = await supabase
+
+    .from("profiles")
+
+    .select("nama, role")
+
+    .eq("id", user.id)
+
+    .single();
+
+
+
+  return data;
+
+}

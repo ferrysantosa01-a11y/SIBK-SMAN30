@@ -2,33 +2,70 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import { supabase } from "@/lib/supabase";
 
 
 export default function LoginPage() {
 
+
   const router = useRouter();
 
-  const [username, setUsername] = useState("");
+
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
 
-  function handleLogin() {
 
 
-    if (username === "admin" && password === "123456") {
 
-      router.push("/dashboard");
+  async function handleLogin(
+    e: React.FormEvent
+  ) {
 
-    } else {
+    e.preventDefault();
 
-      alert("Username atau password salah");
+
+    setLoading(true);
+    setError("");
+
+
+
+    const { error } = await supabase.auth.signInWithPassword({
+
+      email,
+
+      password,
+
+    });
+
+
+
+
+    if (error) {
+
+
+      setError(error.message);
+
+      setLoading(false);
+
+      return;
+
 
     }
 
 
+
+
+   router.push("/dashboard");
+
+
+
   }
+
+
 
 
 
@@ -37,108 +74,119 @@ export default function LoginPage() {
     <main className="min-h-screen bg-gray-100 flex items-center justify-center">
 
 
-      <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
+      <div className="bg-white w-full max-w-md rounded-xl shadow p-8">
 
 
-        <div className="flex justify-center gap-5 mb-6">
+        <h1 className="text-2xl font-bold text-center text-blue-700 mb-6">
 
+          Login SiBK
 
-          <Image
-            src="/logo/logo-sman30.png"
-            alt="Logo SMAN 30"
-            width={90}
-            height={90}
-          />
-
-
-          <Image
-            src="/logo/logo-bk-sman30.png"
-            alt="Logo BK"
-            width={90}
-            height={90}
-          />
-
-
-        </div>
-
-
-
-        <h1 className="text-3xl font-bold text-center text-blue-700">
-          Login SIBK
         </h1>
 
 
-        <p className="text-center text-gray-500 mt-2">
-          SMAN 30 Kabupaten Tangerang
-        </p>
 
 
+        {error && (
 
+          <div className="bg-red-100 text-red-700 p-3 rounded mb-4">
 
-        <div className="mt-8">
+            {error}
 
-          <label>
-            Username
-          </label>
+          </div>
 
-          <input
-            className="w-full border rounded-lg p-3 mt-2"
-            value={username}
-            onChange={(e)=>setUsername(e.target.value)}
-          />
-
-        </div>
+        )}
 
 
 
 
 
-        <div className="mt-5">
 
-          <label>
-            Password
-          </label>
-
-          <input
-
-            type="password"
-
-            className="w-full border rounded-lg p-3 mt-2"
-
-            value={password}
-
-            onChange={(e)=>setPassword(e.target.value)}
-
-          />
-
-        </div>
-
-
-
-
-
-        <button
-
-          onClick={handleLogin}
-
-          className="
-          w-full
-          mt-8
-          bg-blue-600
-          hover:bg-blue-700
-          text-white
-          py-3
-          rounded-lg
-          font-semibold
-          "
-
+        <form
+          onSubmit={handleLogin}
+          className="space-y-4"
         >
 
-          Masuk
-
-        </button>
 
 
+          <div>
+
+            <label className="block mb-2 font-semibold">
+              Email
+            </label>
+
+
+            <input
+
+              type="email"
+
+              value={email}
+
+              onChange={(e)=>setEmail(e.target.value)}
+
+              className="w-full border rounded p-3"
+
+              placeholder="email@contoh.com"
+
+              required
+
+            />
+
+          </div>
+
+
+
+
+
+          <div>
+
+            <label className="block mb-2 font-semibold">
+              Password
+            </label>
+
+
+            <input
+
+              type="password"
+
+              value={password}
+
+              onChange={(e)=>setPassword(e.target.value)}
+
+              className="w-full border rounded p-3"
+
+              placeholder="Password"
+
+              required
+
+            />
+
+          </div>
+
+
+
+
+
+          <button
+
+            type="submit"
+
+            disabled={loading}
+
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded"
+
+          >
+
+            {loading
+              ? "Memproses..."
+              : "Login"
+            }
+
+          </button>
+
+
+
+
+        </form>
 
 
       </div>
