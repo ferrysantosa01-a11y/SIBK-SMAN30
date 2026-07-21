@@ -17,7 +17,7 @@ interface Konseling {
   siswa: {
     nama: string;
     kelas: string;
-  } | null;
+  }[] | null;
 }
 
 
@@ -190,7 +190,7 @@ export default function DetailKonselingPage() {
             <b>Nama Siswa</b>
 
             <p>
-              {data.siswa?.nama ?? "-"}
+             data.siswa?.[0]?.nama
             </p>
 
           </div>
@@ -202,7 +202,7 @@ export default function DetailKonselingPage() {
             <b>Kelas</b>
 
             <p>
-              {data.siswa?.kelas ?? "-"}
+              data.siswa?.[0]?.kelas
             </p>
 
           </div>

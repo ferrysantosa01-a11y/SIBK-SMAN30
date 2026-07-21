@@ -17,9 +17,9 @@ interface Konseling {
   status: string;
 
   siswa: {
-    nama: string;
-    kelas: string;
-  } | null;
+  nama: string;
+  kelas: string;
+}[] | null;
 }
 
 
@@ -340,13 +340,13 @@ useEffect(() => {
 
 
                     <td className="border px-4 py-3">
-                      {item.siswa?.nama ?? "-"}
+                    item.siswa?.[0]?.nama
                     </td>
 
 
 
                     <td className="border px-4 py-3 text-center">
-                      {item.siswa?.kelas ?? "-"}
+                     {item.siswa?.[0]?.kelas ?? "-"}
                     </td>
 
 
